@@ -32,16 +32,25 @@ class AuthController {
       { expiresIn: "7d" }
     );
 
+    // ✅ Set token in cookie
+    res.cookie("token", token, {
+      httpOnly: true, // Prevent access from client-side JS
+      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
     res.status(201).json({
       status: true,
-      message: "User registered",
+      message: "Registration successful",
       data: {
-        token,
         user: {
           id: user._id,
           name: user.name,
           email: user.email,
           role: user.role,
+          avatar: user.avatar,
         },
       },
     });

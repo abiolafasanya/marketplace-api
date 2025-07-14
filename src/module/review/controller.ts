@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
-import { Review } from "./model"; // adjust path
-import catchAsync from "../../shared/request";
+import { Review } from "./model";
 
 export const ReviewController = {
   create: async (req: Request, res: Response) => {
-    const review = await Review.create({ ...req.body, user: req.user.id });
+    const review = await Review.create({ ...req.body, user: req.user?.id });
     res
       .status(201)
       .json({ status: true, message: "Review added", data: review });
