@@ -2,7 +2,7 @@
   "name": "marketplace-api",
   "version": "1.0.0",
   "description": "Marketplace API",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
