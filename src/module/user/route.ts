@@ -1,6 +1,6 @@
 import { Router } from "express";
 import AuthController from "./controller";
-import { authenticate } from "../../commons/middleware/auth";
+import { authenticate } from "../../common/middleware/auth";
 
 export default function (router: Router) {
   router.post("/auth", AuthController.login);
@@ -12,5 +12,19 @@ export default function (router: Router) {
     "/auth/change-password",
     authenticate,
     AuthController.changePassword
+  );
+  router.post("/forgot-password", AuthController.forgotPassword);
+  router.post("/reset-password", AuthController.resetPassword);
+  router.get("/verify-email", AuthController.verifyEmail);
+
+  router.post(
+    "/phone/send-code",
+    authenticate,
+    AuthController.requestPhoneVerificationCode
+  );
+  router.post(
+    "/phone/verify-code",
+    authenticate,
+    AuthController.verifyPhoneCode
   );
 }

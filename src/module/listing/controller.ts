@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Listing, ListingType } from "./model"; // adjust path
-import { paginate } from "../../commons/utils/pagination";
+import { paginate } from "../../common/utils/pagination";
 import catchAsync from "../../shared/request";
 import validateCategoryMetadata from "./validation/validateCategoryMetadata";
 import { createListingSchema } from "./validation/listing";
@@ -31,16 +31,18 @@ export const ListingController = {
   }),
 
   findOne: catchAsync(async (req: Request, res: Response) => {
-    const listing = await Listing.findById(req.params.id).populate([{path: "listedBy", select: "name email role"}]);
+    const listing = await Listing.findById(req.params.id).populate([
+      { path: "listedBy", select: "name email role" },
+    ]);
     if (!listing)
       return res.status(404).json({ status: false, message: "Not found" });
     res.json({ status: true, message: "Listing fetched", data: listing });
   }),
 
   create: catchAsync(async (req: Request, res: Response) => {
-    const value = await createListingSchema.validateAsync(req.body)
-    console.log(value)
-    console.log(req.user?.id)
+    const value = await createListingSchema.validateAsync(req.body);
+    console.log(value);
+    console.log(req.user?.id);
     validateCategoryMetadata(value.category, value.metadata);
     const listing = await Listing.create({
       ...value,

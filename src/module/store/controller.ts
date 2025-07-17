@@ -3,7 +3,7 @@ import catchAsync from "../../shared/request";
 import { Store } from "./model";
 import { updateStoreProfileSchema } from "./validation";
 import { StoreService } from "./service";
-import { NotFoundException } from "../../commons/middleware/errors";
+import { NotFoundException } from "../../common/middleware/errors";
 import { Listing } from "../listing/model";
 
 export const StoreController = {

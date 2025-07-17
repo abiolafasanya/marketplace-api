@@ -9,15 +9,11 @@ import path from "path";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import logger from "./commons/middleware/logger";
-import {
-  AppErrorHandler,
-  NotFoundException,
-} from "./commons/middleware/errors";
-import connectDB from "./commons/database/connection";
-import { SECRETS } from "./commons/constant";
-import deepSanitize from "./commons/utils/sanitze";
-
+import logger from "./common/middleware/logger";
+import { AppErrorHandler, NotFoundException } from "./common/middleware/errors";
+import connectDB from "./common/database/connection";
+import { SECRETS } from "./common/constant";
+import deepSanitize from "./common/utils/sanitze";
 
 const app = express();
 
@@ -62,27 +58,32 @@ app.use(express.urlencoded());
 
 // Set security HTTP headers
 app.use(helmet());
-const morganFormat = ":method :url :status :response-time ms";
 
 app.use(
-  morgan(morganFormat, {
-    stream: {
-      write: (message: string) => {
-        try {
-          const logObj = {
-            method: message.split(" ")[0],
-            url: message.split(" ")[1],
-            status: message.split(" ")[2],
-            responseTime: message.split(" ")[3],
-          };
-          logger.info("RESPONSE", JSON.stringify(logObj));
-        } catch (error) {
-          console.error("Failed to parse log message:");
-          console.log("error", JSON.stringify(error));
-        }
-      },
+  morgan(
+    (tokens, req, res) => {
+      return JSON.stringify({
+        method: tokens.method(req, res),
+        url: tokens.url(req, res),
+        status: Number(tokens.status(req, res)),
+        responseTime: `${tokens["response-time"](req, res)} ms`,
+        contentLength: tokens.res(req, res, "content-length"),
+        timestamp: new Date().toISOString(),
+      });
     },
-  })
+    {
+      stream: {
+        write: (message: string) => {
+          try {
+            const parsed = JSON.parse(message);
+            logger.info("HTTP_LOG", parsed);
+          } catch (err) {
+            console.error("Failed to parse Morgan message", err);
+          }
+        },
+      },
+    }
+  )
 );
 
 const port = Number(process.env.PORT || 4000);

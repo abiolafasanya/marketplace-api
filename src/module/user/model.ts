@@ -10,6 +10,14 @@ export interface IUser extends Document {
   avatar?: string;
   listings: mongoose.Types.ObjectId[];
   comparePassword: (password: string) => Promise<boolean>;
+  resetPasswordToken?: string;
+  resetPasswordExpires?: number;
+  isEmailVerified: boolean;
+  emailVerificationToken?: string;
+  emailVerificationExpires?: number;
+  phoneVerificationCode?: string;
+  phoneVerificationExpires?: number;
+  isPhoneVerified: boolean;
 }
 
 const UserSchema: Schema = new Schema(
@@ -17,10 +25,18 @@ const UserSchema: Schema = new Schema(
     name: String,
     email: { type: String, unique: true },
     password: String,
-    phone: String,
     role: { type: String, enum: ["user", "agent", "admin"], default: "user" },
     avatar: String,
     listings: [{ type: Schema.Types.ObjectId, ref: "Listing" }],
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
+    isEmailVerified: { type: Boolean, default: false },
+    emailVerificationToken: String,
+    emailVerificationExpires: Date,
+    phone: { type: String },
+    phoneVerificationCode: { type: String },
+    phoneVerificationExpires: { type: Date },
+    isPhoneVerified: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

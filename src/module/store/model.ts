@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, model } from "mongoose";
-import shortId from "../../commons/utils/shortId";
+import shortId from "../../common/utils/shortId";
 
 export interface IStore extends Document {
   name: string;
@@ -38,6 +38,5 @@ StoreSchema.pre("save", function (next) {
   }
   next();
 });
-
 
 export const Store = model<IStore>("Store", StoreSchema);

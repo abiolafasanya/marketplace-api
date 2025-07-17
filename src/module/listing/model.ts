@@ -1,6 +1,6 @@
 import mongoose, { Document, model, Schema } from "mongoose";
 import { IUser } from "../user/model";
-import shortId from "../../commons/utils/shortId";
+import shortId from "../../common/utils/shortId";
 
 export interface ListingType {
   title: string;

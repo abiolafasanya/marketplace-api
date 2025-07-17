@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { ListingController } from "./controller";
-import { authenticate } from "../../commons/middleware/auth";
+import { authenticate } from "../../common/middleware/auth";
 import { ReviewController } from "../review/controller";
 
 export default function (router: Router) {
