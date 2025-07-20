@@ -13,6 +13,7 @@ import { StoreCreatedEmail } from "../../shared/emails/StoreCreatedEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Define the type for email options
 interface EmailOptions {
   to: string;
   type:
@@ -24,78 +25,10 @@ interface EmailOptions {
   data: any;
 }
 
-// export async function sendEmail({ to, type, data }: EmailOptions) {
-//   let html: string = "";
-//   let subject: string = "";
-
-//   try {
-//     // Build email content
-//     switch (type) {
-//       case "onboarding":
-//         html = await render(<OnboardingEmail name={data.name} />);
-//         subject = "Welcome to Marketplace!";
-//         break;
-//       case "verify":
-//         html = await render(
-//           <VerifyEmail
-//             name={data.name}
-//             verificationUrl={data.verificationUrl}
-//           />
-//         );
-//         subject = "Verify Your Email";
-//         break;
-//       case "reset-password":
-//         html = await render(<ResetPasswordEmail resetUrl={data.resetUrl} />);
-//         subject = "Reset Your Password";
-//         break;
-//       case "phone-verification":
-//         html = await render(<PhoneVerificationEmail code={data.code} />);
-//         subject = "Your Phone Verification Code";
-//         break;
-//       case "store-created":
-//         html = await render(
-//           <StoreCreatedEmail
-//             storeName={data.storeName}
-//             dashboardUrl={data.dashboardUrl}
-//           />
-//         );
-//         subject = "Your Store Has Been Created!";
-//         break;
-//       default:
-//         throw new Error(`Unsupported email type: ${type}`);
-//     }
-
-//     // Send email
-//     const result = await resend.emails.send({
-//       from: "Marketplace <onboarding@resend.dev>",
-//       to,
-//       subject,
-//       html,
-//     });
-
-//     console.info(`[EMAIL:SUCCESS] Sent "${type}" email to ${to}.`, {
-//       to,
-//       subject,
-//       messageId: result?.data?.id || "unknown",
-//     });
-
-//     return result;
-//   } catch (error: any) {
-//     console.error(`[EMAIL:ERROR] Failed to send "${type}" email to ${to}.`, {
-//       to,
-//       subject,
-//       error: error?.message || error,
-//       stack: error?.stack,
-//     });
-//     throw error;
-//   }
-// }
-
-
 export async function sendEmail({ to, type, data }: EmailOptions) {
   let html: string = "";
   let subject: string = "";
-
+  
   try {
     // Build HTML + subject
     switch (type) {
@@ -103,20 +36,20 @@ export async function sendEmail({ to, type, data }: EmailOptions) {
         html = await render(<OnboardingEmail name={data.name} />);
         subject = "Welcome to Marketplace!";
         break;
-      case "verify":
-        html = await render(
-          <VerifyEmail
+        case "verify":
+          html = await render(
+            <VerifyEmail
             name={data.name}
             verificationUrl={data.verificationUrl}
-          />
-        );
+            />
+          );
         subject = "Verify Your Email";
         break;
-      case "reset-password":
+        case "reset-password":
         html = await render(<ResetPasswordEmail resetUrl={data.resetUrl} />);
         subject = "Reset Your Password";
         break;
-      case "phone-verification":
+        case "phone-verification":
         html = await render(<PhoneVerificationEmail code={data.code} />);
         subject = "Your Phone Verification Code";
         break;
@@ -129,16 +62,19 @@ export async function sendEmail({ to, type, data }: EmailOptions) {
         );
         subject = "Your Store Has Been Created!";
         break;
-      default:
-        throw new Error(`Unsupported email type: ${type}`);
-    }
-
-    const result = await resend.emails.send({
-      from: "Marketplace <onboarding@resend.dev>",
-      to,
+        default:
+          throw new Error(`Unsupported email type: ${type}`);
+        }
+        console.log("Resend initialized with API key:", process.env.RESEND_API_KEY);
+        
+        const result = await resend.emails.send({
+          from: "Marketplace <onboarding@resend.dev>",
+          to,
       subject,
       html,
     });
+
+    // Log email
 
     // Try to find the user (optional)
     const user = await User.findOne({ email: to });
