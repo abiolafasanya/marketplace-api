@@ -13,17 +13,17 @@ export default function (router: Router) {
     authenticate,
     AuthController.changePassword
   );
-  router.post("/forgot-password", AuthController.forgotPassword);
-  router.post("/reset-password", AuthController.resetPassword);
-  router.get("/verify-email", AuthController.verifyEmail);
+  router.post("/auth/forgot-password", AuthController.forgotPassword);
+  router.post("/auth/reset-password", AuthController.resetPassword);
+  router.get("/auth/verify-email", AuthController.verifyEmail);
 
   router.post(
-    "/phone/send-code",
+    "/auth/phone/send-code",
     authenticate,
     AuthController.requestPhoneVerificationCode
   );
   router.post(
-    "/phone/verify-code",
+    "/auth/phone/verify-code",
     authenticate,
     AuthController.verifyPhoneCode
   );

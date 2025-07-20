@@ -4,7 +4,6 @@ import express from "express";
 import cors from "cors";
 import routeHandler from "./routes";
 import helmet from "helmet";
-import mongoSanitize from "express-mongo-sanitize";
 import path from "path";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -26,25 +25,6 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
 app.use(cookieParser()); // 👈 REQUIRED before your authenticate middleware
-
-// const allowedOrigins = ["http://localhost:3000"];
-
-// app.use(
-//   cors({
-//     origin: function (origin, callback) {
-//       // Allow requests with no origin (like mobile apps or Postman)
-//       if (!origin) return callback(null, true);
-
-//       // Check if the origin is in the allowed list
-//       if (allowedOrigins.indexOf(origin) !== -1) {
-//         return callback(null, true);
-//       } else {
-//         return callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true,
-//   })
-// );
 
 app.use(
   cors({
